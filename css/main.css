@@ -51,7 +51,12 @@ main {
 .player.active .play-pause {
   /* playing */
 }
-.player .controls {
+.current,
+.duration {
+  color: #fff;
+}
+.player .controls,
+.player .status {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;

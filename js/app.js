@@ -27,6 +27,8 @@ const APP = {
     list.addEventListener('click', APP.selectTrack);
     //listen for the ended event
     APP.audio.addEventListener('ended', APP.ended);
+    //listen for timeupdate
+    APP.audio.addEventListener('timeupdate', APP.timeupdate);
     APP.loadTrack(APP.currentTrack, true);
   },
   loadTrack: (current, wait) => {
@@ -131,6 +133,35 @@ const APP = {
   ended: (ev) => {
     //track has ended
     APP.next();
+  },
+  timeupdate: (ev) => {
+    let duration = APP.audio.duration;
+    let current = APP.audio.currentTime;
+    console.log(current, duration);
+    if (!isNaN(current)) {
+      document.querySelector('.current').textContent = APP.secondsToTime(
+        parseInt(current)
+      );
+    }
+    if (!isNaN(duration)) {
+      document.querySelector('.duration').textContent = APP.secondsToTime(
+        parseInt(duration)
+      );
+    }
+    if (!isNaN(duration) && !isNaN(current)) {
+      let pct = parseInt((current / duration) * 100);
+      console.log(pct);
+      document.querySelector('.progress').value = pct;
+    }
+  },
+  secondsToTime: (seconds) => {
+    //convert a float value to minutes and seconds 00:00
+    let minutes = Math.floor(seconds / 60);
+    seconds = parseInt(seconds % 60);
+    let time = `${minutes.toString().padStart(2, '0')}:${seconds
+      .toString()
+      .padStart(2, '0')}`;
+    return time;
   },
 };
 
