@@ -10,10 +10,9 @@ const APP = {
     APP.audio.volume = 0.5;
 
     APP.player = document.querySelector('.player');
-    document
-      .querySelector('.controls')
-      .addEventListener('click', APP.processClick);
+
     APP.buildList();
+    APP.addListeners();
   },
   buildList: () => {
     let list = document.querySelector('.list-area ul');
@@ -25,11 +24,19 @@ const APP = {
           </li>`;
     }).join('');
     list.addEventListener('click', APP.selectTrack);
+    APP.loadTrack(APP.currentTrack, true);
+  },
+  addListeners: () => {
     //listen for the ended event
     APP.audio.addEventListener('ended', APP.ended);
     //listen for timeupdate
     APP.audio.addEventListener('timeupdate', APP.timeupdate);
-    APP.loadTrack(APP.currentTrack, true);
+    //listen for button clicks
+    document
+      .querySelector('.controls')
+      .addEventListener('click', APP.processClick);
+    //listen for progress clicks
+    document.querySelector('.progress').addEventListener('click', APP.seek);
   },
   loadTrack: (current, wait) => {
     let track = TRACKS[current];
@@ -39,7 +46,7 @@ const APP = {
     img.alt = track.title;
     let title = APP.player.querySelector('.visual h2');
     title.textContent = track.title;
-    console.log('loadTrack - play');
+    // console.log('loadTrack - play');
     if (!wait) APP.play();
   },
   selectTrack: (ev) => {
@@ -56,6 +63,7 @@ const APP = {
     APP.currentTrack = index;
     console.log('selected track', index);
     APP.loadTrack(index);
+    window.scrollTo(0, 0);
   },
   processClick: (ev) => {
     let btn = ev.target.closest('.btn');
@@ -86,12 +94,12 @@ const APP = {
     if (ev) ev.preventDefault();
     let icon = document.querySelector('.play-pause .material-icons');
     if (APP.audio.paused || APP.audio.ended) {
-      console.log(`start playing`);
+      // console.log(`start playing`);
       APP.player.classList.add('active');
       APP.audio.play();
       icon.textContent = 'pause_circle';
     } else {
-      console.log(`pause`);
+      // console.log(`pause`);
       APP.player.classList.remove('active');
       APP.audio.pause();
       icon.textContent = 'play_circle';
@@ -116,7 +124,7 @@ const APP = {
   },
   forward: () => {
     let time = APP.audio.currentTime;
-    time += 30;
+    time += 10;
     if (time > APP.audio.duration) {
       APP.audio.pause();
       APP.next();
@@ -134,10 +142,21 @@ const APP = {
     //track has ended
     APP.next();
   },
+  seek: (ev) => {
+    //clicked on progress bar
+    let x = ev.offsetX;
+    let w = ev.target.clientWidth;
+    let pct = x / w;
+    // console.log({ x, w, pct });
+    let duration = APP.audio.duration;
+    let current = duration * pct;
+    // console.log({ duration, current });
+    APP.audio.currentTime = current;
+  },
   timeupdate: (ev) => {
     let duration = APP.audio.duration;
     let current = APP.audio.currentTime;
-    console.log(current, duration);
+    // console.log(current, duration);
     if (!isNaN(current)) {
       document.querySelector('.current').textContent = APP.secondsToTime(
         parseInt(current)
@@ -150,7 +169,7 @@ const APP = {
     }
     if (!isNaN(duration) && !isNaN(current)) {
       let pct = parseInt((current / duration) * 100);
-      console.log(pct);
+      // console.log(pct);
       document.querySelector('.progress').value = pct;
     }
   },
