@@ -46,6 +46,10 @@ const APP = {
     img.alt = track.title;
     let title = APP.player.querySelector('.visual h2');
     title.textContent = track.title;
+    let old = document.querySelector('.listitem.active');
+    old?.classList.remove('active');
+    let li = document.querySelectorAll('.listitem')[current];
+    li.classList.add('active');
     // console.log('loadTrack - play');
     if (!wait) APP.play();
   },

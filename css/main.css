@@ -173,6 +173,9 @@ progress[value]::progress-value {
     rgba(224, 6, 6, 0) 100%
   );
 }
+li.listitem.active * {
+  color: #fff;
+}
 .listitem:first-child {
   border-top: 1px solid hsl(0, 50%, 50%);
 }
