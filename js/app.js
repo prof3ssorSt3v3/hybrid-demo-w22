@@ -4,12 +4,14 @@ const APP = {
   currentTrack: 0,
   audio: null,
   player: null,
+  mute: null,
   init: () => {
     //onload
     APP.audio = document.getElementById('audio');
     APP.audio.volume = 0.5;
 
     APP.player = document.querySelector('.player');
+    APP.mute = document.querySelector('.player .mute');
 
     APP.buildList();
     APP.addListeners();
@@ -37,6 +39,8 @@ const APP = {
       .addEventListener('click', APP.processClick);
     //listen for progress clicks
     document.querySelector('.progress').addEventListener('click', APP.seek);
+    //listen for clicks on mute button
+    APP.mute.addEventListener('click', APP.toggleMute);
   },
   loadTrack: (current, wait) => {
     let track = TRACKS[current];
@@ -108,6 +112,11 @@ const APP = {
       APP.audio.pause();
       icon.textContent = 'play_circle';
     }
+  },
+  toggleMute: (ev) => {
+    let txt = APP.mute.textContent;
+    APP.mute.textContent = txt == 'volume_up' ? 'volume_off' : 'volume_up';
+    APP.audio.volume = txt == 'volume_off' ? 0.5 : 0;
   },
   stop: () => {
     APP.audio.pause();

@@ -57,7 +57,17 @@ main {
   /* default styling */
   border: 1px solid hsl(0, 50%, 50%);
   margin: 0rem 1rem;
-  overflow: hidden;
+  /* overflow: hidden; */
+  position: relative;
+}
+.player .mute {
+  position: absolute;
+  top: -1.5rem;
+  left: -1.5rem;
+  width: 3rem;
+  height: 3rem;
+  font-size: 3rem;
+  color: white;
 }
 .player .visual {
   text-align: center;
